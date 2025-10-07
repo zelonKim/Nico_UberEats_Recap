@@ -5,20 +5,21 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
-import { IsEmail, IsEnum } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 
-enum UserRole {
-  Client,
-  Owner,
-  Delivery,
+export enum UserRole {
+  Client = 'Client',
+  Owner = 'Owner',
+  Delivery = 'Delivery',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType({ isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -27,8 +28,9 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   @Field(type => String)
+  @IsString()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
@@ -38,16 +40,27 @@ export class User extends CoreEntity {
 
   @Column({ default: false })
   @Field(type => Boolean)
+  @IsBoolean()
   verified: boolean;
+
+  @Field(type => [Restaurant])
+  @OneToMany(
+    // 한명의 유저는 많은 레스토랑을 소유할 수 있음.
+    type => Restaurant,
+    restaurant => restaurant.owner,
+  )
+  restaurants: Restaurant[];
 
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
-    try {
-      this.password = await bcrypt.hash(this.password, 10);
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
+    if (this.password) {
+      try {
+        this.password = await bcrypt.hash(this.password, 10);
+      } catch (err) {
+        console.log(err);
+        throw new InternalServerErrorException();
+      }
     }
   }
 

@@ -12,11 +12,11 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { Role } from 'src/auth/role.decorator';
 
 @Resolver(of => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
-
   @Mutation(returns => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
@@ -52,12 +52,12 @@ export class UsersResolver {
   }
 
   @Query(returns => User)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   me(@AuthUser() authUser: User) {
     return authUser;
   }
 
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   @Query(returns => UserProfileOutput)
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
@@ -79,7 +79,7 @@ export class UsersResolver {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   @Mutation(returns => EditProfileOutput)
   async editProfile(
     @AuthUser() authUser: User,
@@ -99,7 +99,19 @@ export class UsersResolver {
   }
 
   @Mutation(returns => VerifyEmailOutput)
-  verifyEmail(@Args('input') { code }: VerifyEmailInput) {
-    this.usersService.verifyEmail(code);
+  verifyEmail(
+    @Args('input') { code }: VerifyEmailInput,
+  ): Promise<VerifyEmailOutput> {
+    try {
+      this.usersService.verifyEmail(code);
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      return {
+        ok: false,
+        error: err,
+      };
+    }
   }
 }

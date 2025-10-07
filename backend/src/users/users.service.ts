@@ -8,6 +8,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from 'src/jwt/jwt.service';
 import { EditProfileInput } from './dtos/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
+import { VerifyEmailOutput } from './dtos/verify-email.dto';
+import { MailService } from 'src/mail/mail.service';
 
 export class UsersService {
   constructor(
@@ -15,6 +17,7 @@ export class UsersService {
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async createAccount({
@@ -32,11 +35,12 @@ export class UsersService {
         this.users.create({ email, password, role }),
       );
 
-      await this.verifications.save(
+      await erification = await this.verifications.save(
         this.verifications.create({
           user,
         }),
       );
+      this.mailService.sendVerificationEmail(user.email,  verification.code);
 
       return { ok: true };
     } catch (err) {
@@ -49,7 +53,11 @@ export class UsersService {
     password,
   }: LoginInput): Promise<{ ok: boolean; error?: string; token?: string }> {
     try {
-      const user = await this.users.findOne({ email });
+      const user = await this.users.findOne(
+        { email },
+        { select: ['id', 'password'] },
+      );
+
       if (!user) {
         return {
           ok: false,
@@ -63,7 +71,8 @@ export class UsersService {
           error: 'Wrong Password',
         };
       }
-      const token = this.jwtService.sign({ id: user.id });
+
+      const token = this.jwtService.sign(user.id);
 
       return {
         ok: true,
@@ -87,6 +96,7 @@ export class UsersService {
     if (email) {
       user.email = email;
       user.verified = false;
+      const verification = await this.verifications.save(this.verifications.create( {user} ))
       await this.verifications.save(this.verifications.create({ user }));
     }
 
@@ -97,15 +107,23 @@ export class UsersService {
     return this.users.save(user);
   }
 
-  async verifyEmail(code: string): Promise<boolean> {
+  async verifyEmail(code: string): Promise<VerifyEmailOutput> {
     const verification = await this.verifications.findOne(
       { code },
       { relations: ['user'] },
     );
+
     if (verification) {
       verification.user.verified = true;
-      this.users.save(verification.user);
+      await this.users.save(verification.user);
+      await this.verifications.delete(verification.id);
+      return { ok: true };
     }
-    return false;
+
+    return { ok: false, error: 'Verification not found' };
+  }
+
+  catch(err) {
+    return { ok: false, error: err };
   }
 }
