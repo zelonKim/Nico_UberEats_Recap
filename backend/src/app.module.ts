@@ -20,6 +20,10 @@ import { AuthModule } from './auth/auth.module';
 import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
 import { Category } from './restaurants/entities/category.entity';
+import { Dish } from './restaurants/entities/dish.entity';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -46,7 +50,15 @@ import { Category } from './restaurants/entities/category.entity';
       type: 'postgres',
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Verification, Restaurant, Category],
+      entities: [
+        User,
+        Verification,
+        Restaurant,
+        Category,
+        Dish,
+        Order,
+        OrderItem,
+      ],
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       username: process.env.DB_USERNAME,
@@ -54,8 +66,18 @@ import { Category } from './restaurants/entities/category.entity';
       database: process.env.DB_NAME,
     }),
     GraphQLModule.forRoot({
+      installSubscriptionHandlers: true, // 웹소켓과 연결함. -> request가 아닌, connection을 받음.
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({ req, connection }) => {
+        const TOKEN_KEY = 'x-jwt';
+        if (req) {
+          // HTTP일 경우
+          return { token: req.headers[TOKEN_KEY] };
+        } else if (connection) {
+          // WS(웹소켓)일 경우
+          return { token: connection.context[TOKEN_KEY] };
+        }
+      },
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
@@ -67,15 +89,18 @@ import { Category } from './restaurants/entities/category.entity';
     }),
     UsersModule,
     AuthModule,
+    OrdersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.ALL,
-    });
-  }
-}
+// export class AppModule implements NestModule { // 웹소켓에서는 JWT 미들웨어 사용 불가
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(JwtMiddleware).forRoutes({
+//       path: '/graphql',
+//       method: RequestMethod.ALL,
+//     });
+//   }
+// }
+export class AppModule {}

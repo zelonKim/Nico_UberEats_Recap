@@ -35,7 +35,7 @@ export class UsersService {
         this.users.create({ email, password, role }),
       );
 
-      await erification = await this.verifications.save(
+      await verification = await this.verifications.save(
         this.verifications.create({
           user,
         }),

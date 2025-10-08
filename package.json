@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "form-data": "^4.0.4",
-    "got": "^14.4.9"
-  }
-}
