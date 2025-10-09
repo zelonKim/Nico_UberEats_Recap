@@ -24,6 +24,9 @@ import { Dish } from './restaurants/entities/dish.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { PaymentsModule } from './payments/payments.module';
+import { Payment } from './payments/entities/payments.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -58,6 +61,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
         Dish,
         Order,
         OrderItem,
+        Payment,
       ],
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
@@ -79,6 +83,8 @@ import { OrderItem } from './orders/entities/order-item.entity';
         }
       },
     }),
+    ScheduleModule.forRoot(),
+    
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
     }),
@@ -91,6 +97,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
     AuthModule,
     OrdersModule,
     CommonModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [],
