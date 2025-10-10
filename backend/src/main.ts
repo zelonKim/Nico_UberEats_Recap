@@ -10,6 +10,8 @@ async function bootstrap() {
 
   app.use(JwtMiddleware);
 
+  app.enableCors();
+
   await app.listen(4000);
 }
 bootstrap();

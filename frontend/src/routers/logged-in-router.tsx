@@ -10,17 +10,52 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { EditProfile } from "../pages/user/edit-profile";
 import { ConfirmEmail } from "../pages/user/confirm-email";
+import { NotFound } from "../pages/404";
+import { Search } from "../pages/client/search";
+import { Category } from "../pages/client/category";
+import { Restaurant } from "../pages/client/restaurant";
+import { MyRestaurants } from "../pages/owner/my-restaurants";
+import { AddRestaurant } from "../pages/owner/add-restaurants";
 
-const ClientRoutes = [
-  <Route key={1} path="/" exact>
-    <Restaurants />
-  </Route>,
-  <Route key={2} path="/confirm" exact>
-    <ConfirmEmail />
-  </Route>,
-  <Route key={3} path="/edit-profile" exact>
-    <EditProfile />
-  </Route>,
+const clientRoutes = [
+  {
+    path: "/",
+    component: <Restaurants />,
+  },
+  {
+    path: "/search",
+    component: <Search />,
+  },
+  {
+    path: "/category/:slug",
+    component: <Category />,
+  },
+  {
+    path: "/restaurants/:id",
+    component: <Restaurant />,
+  },
+];
+
+const commonRoutes = [
+  {
+    path: "/confirm",
+    component: <ConfirmEmail />,
+  },
+  {
+    path: "/edit-profile",
+    component: <EditProfile />,
+  },
+];
+
+const restaurantRoutes = [
+  {
+    path: "/",
+    component: <MyRestaurants />,
+  },
+  {
+    path: "/add-restaurant",
+    component: <AddRestaurant />,
+  },
 ];
 
 const ME_QUERY = gql`
@@ -52,7 +87,31 @@ export const LoggedInRouter = () => {
   return (
     <Router>
       <Header email={data.me.email} />
-      <Switch>{data.me.role === "Client" && ClientRoutes}</Switch>
+      <Switch>
+        {data.me.role === "Client" &&
+          clientRoutes.map((route) => (
+            <Route key={route.path} path={route.path}>
+              {route.component}
+            </Route>
+          ))}
+
+        {data.me.role === "Owner" &&
+          restaurantRoutes.map((route) => (
+            <Route key={route.path} path={route.path}>
+              {route.component}
+            </Route>
+          ))}
+
+        {commonRoutes.map((route) => (
+          <Route key={route.path} path={route.path}>
+            {route.component}
+          </Route>
+        ))}
+
+        <Route>
+          <NotFound />
+        </Route>
+      </Switch>
     </Router>
   );
 };
