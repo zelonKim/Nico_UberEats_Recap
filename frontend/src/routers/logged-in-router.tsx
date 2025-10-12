@@ -16,6 +16,8 @@ import { Category } from "../pages/client/category";
 import { Restaurant } from "../pages/client/restaurant";
 import { MyRestaurants } from "../pages/owner/my-restaurants";
 import { AddRestaurant } from "../pages/owner/add-restaurants";
+import { Order } from "../pages/order";
+import { Dashboard } from "../pages/driver/dashboard";
 
 const clientRoutes = [
   {
@@ -45,6 +47,10 @@ const commonRoutes = [
     path: "/edit-profile",
     component: <EditProfile />,
   },
+  {
+    path: "/orders/:id",
+    component: <Order />,
+  },
 ];
 
 const restaurantRoutes = [
@@ -58,16 +64,7 @@ const restaurantRoutes = [
   },
 ];
 
-const ME_QUERY = gql`
-  query meQuery {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`;
+const driverRoutes = [{ path: "/", component: <Dashboard /> }];
 
 export const LoggedInRouter = () => {
   const onClick = () => {
@@ -88,15 +85,22 @@ export const LoggedInRouter = () => {
     <Router>
       <Header email={data.me.email} />
       <Switch>
-        {data.me.role === "Client" &&
+        {data.me.role === UserRole.Client &&
           clientRoutes.map((route) => (
             <Route key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
 
-        {data.me.role === "Owner" &&
+        {data.me.role === UserRole.Owner &&
           restaurantRoutes.map((route) => (
+            <Route key={route.path} path={route.path}>
+              {route.component}
+            </Route>
+          ))}
+
+        {data.me.role === UserRole.Delivery &&
+          driverRoutes.map((route) => (
             <Route key={route.path} path={route.path}>
               {route.component}
             </Route>

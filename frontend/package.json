@@ -1,40 +1,52 @@
 {
-  "name": "frontend",
+  "name": "nuber-eats-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^4.0.7",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.126",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
-    "@types/react-router-dom": "^5.3.3",
-    "autoprefixer": "^10.4.21",
-    "aws-sdk": "^2.1692.0",
-    "graphql": "^16.11.0",
-    "postcss": "^8.5.6",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-hook-form": "^7.64.0",
-    "react-query": "^3.39.3",
-    "react-router-dom": "^7.9.4",
-    "react-scripts": "5.0.1",
-    "rimraf": "^6.0.1",
-    "tailwindcss": "^4.1.14",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "@apollo/client": "^3.2.7",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.13",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.2.2",
+    "@types/google-map-react": "^2.1.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.19.6",
+    "@types/react": "^16.14.1",
+    "@types/react-dom": "^16.9.10",
+    "@types/react-helmet": "^6.1.0",
+    "@types/react-router-dom": "^5.1.6",
+    "apollo": "^2.31.1",
+    "autoprefixer": "^10.0.2",
+    "cypress": "^6.0.1",
+    "google-map-react": "^2.2.5",
+    "graphql": "^15.4.0",
+    "postcss": "^8.1.9",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
+    "react-helmet-async": "^1.0.7",
+    "react-hook-form": "^6.11.4",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.0-next.98",
+    "rimraf": "^3.0.2",
+    "subscriptions-transport-ws": "^0.9.19",
+    "tailwindcss": "^2.0.1",
+    "typescript": "^4.1.2",
+    "victory": "^35.4.2",
+    "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "npm run apollo:codegen & npm run tailwind:build & react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "tailwind:prodbuild": "NODE_ENV=production npm run tailwind:build",
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
-    "apollo:codegen": "rimraf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript --outputFlat"
+    "start": "npm run apollo:codegen & npm run tailwind:build & react-scripts start",
+    "apollo:codegen": " rimraf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript --outputFlat",
+    "build": "CI=false react-scripts build",
+    "prebuild": "npm run tailwind:prodbuild",
+    "test": "react-scripts test",
+    "test:coverage": "npm test -- --coverage --watchAll=false",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -53,5 +65,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/components/**/*.tsx",
+      "./src/pages/**/*.tsx",
+      "./src/routers/**/*.tsx"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/cypress": "^7.0.2",
+    "@types/googlemaps": "^3.40.3",
+    "mock-apollo-client": "^1.0.0"
   }
 }

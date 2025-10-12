@@ -68,6 +68,27 @@ export const MyRestaurant = () => {
     }
   );
 
+  const PENDING_ORDERS_SUBSCRIPTION = gql`
+    subscription pendingOrders {
+      pendingOrders {
+        ...FullOrderParts
+      }
+    }
+    ${FULL_ORDER_FRAGMENT}
+  `;
+
+  const { data: subscriptionData } = useSubscription<pendingOrders>(
+    PENDING_ORDERS_SUBSCRIPTION
+  );
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      history.push(`/orders/${subscriptionData.pendingOrders.id}`);
+    }
+  }, [subscriptionData]);
+
   return (
     <div>
       <Helmet>
