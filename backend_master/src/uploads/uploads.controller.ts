@@ -16,26 +16,45 @@ export class UploadsController {
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file) {
+    if (!file) {
+      throw new Error('No file uploaded');
+    }
+
+    const awsKey = this.configService.get('AWS_KEY');
+    const awsSecret = this.configService.get('AWS_SECRET');
+
+    if (!awsKey || !awsSecret) {
+      throw new Error('AWS credentials not configured');
+    }
+
     AWS.config.update({
       credentials: {
-        accessKeyId: this.configService.get('AWS_KEY'),
-        secretAccessKey: this.configService.get('AWS_SECRET'),
+        accessKeyId: awsKey,
+        secretAccessKey: awsSecret,
       },
+      region: 'ap-northeast-2',
     });
+
     try {
       const objectName = `${Date.now() + file.originalname}`;
-      await new AWS.S3()
+
+      const uploaded = await new AWS.S3()
         .putObject({
           Body: file.buffer,
           Bucket: BUCKET_NAME,
           Key: objectName,
-          ACL: 'public-read',
         })
         .promise();
-      const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${objectName}`;
+
+      console.log('S3 upload successful:', uploaded);
+
+      const url = `https://${BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/${objectName}`;
+      console.log(url);
       return { url };
+      
     } catch (e) {
-      return null;
+      console.error('S3 upload error:', e);
+      throw new Error(`Upload failed: ${e.message}`);
     }
   }
 }

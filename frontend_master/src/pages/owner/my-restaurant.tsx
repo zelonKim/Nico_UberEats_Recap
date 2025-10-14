@@ -75,6 +75,7 @@ interface IParams {
 
 export const MyRestaurant = () => {
   const { id } = useParams<IParams>();
+
   const { data } = useQuery<myRestaurant, myRestaurantVariables>(
     MY_RESTAURANT_QUERY,
     {
@@ -85,18 +86,22 @@ export const MyRestaurant = () => {
       },
     }
   );
+
   const onCompleted = (data: createPayment) => {
     if (data.createPayment.ok) {
-      alert("Your restaurant is being promoted!");
+      alert("레스토랑 등록이 완료되었습니다.");
     }
   };
+
   const [createPaymentMutation, { loading }] = useMutation<
     createPayment,
     createPaymentVariables
   >(CREATE_PAYMENT_MUTATION, {
     onCompleted,
   });
+
   const { data: userData } = useMe();
+
   const triggerPaddle = () => {
     if (userData?.me.email) {
       // @ts-ignore
@@ -118,49 +123,60 @@ export const MyRestaurant = () => {
       });
     }
   };
+
   const { data: subscriptionData } = useSubscription<pendingOrders>(
     PENDING_ORDERS_SUBSCRIPTION
   );
+
   const history = useHistory();
+
   useEffect(() => {
     if (subscriptionData?.pendingOrders.id) {
       history.push(`/orders/${subscriptionData.pendingOrders.id}`);
     }
   }, [subscriptionData]);
+
   return (
     <div>
       <Helmet>
         <title>
-          {data?.myRestaurant.restaurant?.name || "Loading..."} | Nuber Eats
+          {data?.myRestaurant.restaurant?.name || "Loading..."} | Uber Eats
         </title>
         <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
       </Helmet>
+
       <div className="checkout-container"></div>
       <div
-        className="  bg-gray-700  py-28 bg-center bg-cover"
+        className="py-28 bg-center bg-cover"
         style={{
           backgroundImage: `url(${data?.myRestaurant.restaurant?.coverImg})`,
         }}
       ></div>
-      <div className="container mt-10">
+
+      <div className="container mt-10 px-6">
         <h2 className="text-4xl font-medium mb-10">
           {data?.myRestaurant.restaurant?.name || "Loading..."}
         </h2>
-        <Link
-          to={`/restaurants/${id}/add-dish`}
-          className=" mr-8 text-white bg-gray-800 py-3 px-10"
-        >
-          Add Dish &rarr;
-        </Link>
-        <span
-          onClick={triggerPaddle}
-          className=" cursor-pointer text-white bg-lime-700 py-3 px-10"
-        >
-          Buy Promotion &rarr;
-        </span>
+
+        <div className="flex justify-between">
+          <Link
+            to={`/restaurants/${id}/add-dish`}
+            className=" mr-8 text-white rounded-md bg-lime-600 py-3 px-10 hover:bg-lime-700"
+          >
+            메뉴 추가하기 &rarr;
+          </Link>
+
+          <span
+            onClick={triggerPaddle}
+            className=" cursor-pointer text-white rounded-md py-3 px-10 bg-yellow-500 hover:bg-yellow-600"
+          >
+            가게 홍보하기 &rarr;
+          </span>
+        </div>
+
         <div className="mt-10">
           {data?.myRestaurant.restaurant?.menu.length === 0 ? (
-            <h4 className="text-xl mb-5">Please upload a dish!</h4>
+            <h4 className="text-lg mb-5">판매할 음식 메뉴를 추가해주세요.</h4>
           ) : (
             <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
               {data?.myRestaurant.restaurant?.menu.map((dish, index) => (
@@ -168,6 +184,7 @@ export const MyRestaurant = () => {
                   key={index}
                   name={dish.name}
                   description={dish.description}
+                  photo={dish.photo}
                   price={dish.price}
                 />
               ))}
@@ -175,8 +192,8 @@ export const MyRestaurant = () => {
           )}
         </div>
         <div className="mt-20 mb-10">
-          <h4 className="text-center text-2xl font-medium">Sales</h4>
-          <div className="  mt-10">
+          <h4 className="text-center text-2xl font-medium">매출 실적</h4>
+          <div className="mt-10">
             <VictoryChart
               height={500}
               theme={VictoryTheme.material}

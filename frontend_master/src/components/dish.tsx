@@ -6,6 +6,7 @@ interface IDishProps {
   description: string;
   name: string;
   price: number;
+  photo?: string | null;
   isCustomer?: boolean;
   orderStarted?: boolean;
   isSelected?: boolean;
@@ -19,6 +20,7 @@ export const Dish: React.FC<IDishProps> = ({
   description,
   name,
   price,
+  photo,
   isCustomer = false,
   orderStarted = false,
   options,
@@ -39,12 +41,21 @@ export const Dish: React.FC<IDishProps> = ({
   };
   return (
     <div
-      className={` px-8 py-4 border cursor-pointer  transition-all ${
-        isSelected ? "border-gray-800" : " hover:border-gray-800"
+      className={`rounded-md px-8 py-4 border-2 cursor-pointer  transition-all ${
+        isSelected ? "border-green-600" : " hover:border-green-500"
       }`}
     >
-      <div className="mb-5">
-        <h3 className="text-lg font-medium flex items-center ">
+      {photo && (
+        <div className="mb-4">
+          <img
+            src={photo}
+            alt={name}
+            className="w-full h-40 object-cover rounded-md"
+          />
+        </div>
+      )}
+      <div className="mb-5 flex justify-between">
+        <h3 className="text-xl font-medium flex items-center ">
           {name}{" "}
           {orderStarted && (
             <button
@@ -57,9 +68,10 @@ export const Dish: React.FC<IDishProps> = ({
             </button>
           )}
         </h3>
-        <h4 className="font-medium">{description}</h4>
+        <span className="mt-1">{price} ₩</span>
       </div>
-      <span>${price}</span>
+      <h4 className="font-medium">{description}</h4>
+
       {isCustomer && options && options?.length !== 0 && (
         <div>
           <h5 className="mt-8 mb-3 font-medium">Dish Options:</h5>

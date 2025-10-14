@@ -32,22 +32,27 @@ export class UserService {
     try {
       const exists = await this.users.findOne({ email });
       if (exists) {
-        return { ok: false, error: 'There is a user with that email already' };
+        return { ok: false, error: '이미 존재하는 이메일 입니다.' };
       }
+
       const user = await this.users.save(
         this.users.create({ email, password, role }),
       );
+
       const verification = await this.verifications.save(
         this.verifications.create({
           user,
         }),
       );
+
       this.mailService.sendVerificationEmail(user.email, verification.code);
       return { ok: true };
     } catch (e) {
-      return { ok: false, error: "Couldn't create account" };
+      return { ok: false, error: '해당 계정을 생성할 수 없습니다.' };
     }
   }
+
+  ////////////////////////////////
 
   async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
@@ -55,21 +60,25 @@ export class UserService {
         { email },
         { select: ['id', 'password'] },
       );
+
       if (!user) {
         return {
           ok: false,
-          error: 'User not found',
+          error: '존재하지 않는 유저입니다.',
         };
       }
+
       const passwordCorrect = await user.checkPassword(password);
+
       if (!passwordCorrect) {
         return {
           ok: false,
-          error: 'Wrong password',
+          error: '비밀번호가 올바르지 않습니다.',
         };
       }
 
       const token = this.jwtService.sign(user.id);
+
       return {
         ok: true,
         token,
@@ -77,10 +86,12 @@ export class UserService {
     } catch (error) {
       return {
         ok: false,
-        error: "Can't log user in.",
+        error: '로그인 할 수 없습니다.',
       };
     }
   }
+
+  //////////////////////////////////
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {
@@ -90,9 +101,11 @@ export class UserService {
         user,
       };
     } catch (error) {
-      return { ok: false, error: 'User Not Found' };
+      return { ok: false, error: '유저를 찾을 수 없습니다.' };
     }
   }
+
+  //////////////////////////////
 
   async editProfile(
     userId: number,
@@ -100,26 +113,34 @@ export class UserService {
   ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne(userId);
+
       if (email) {
         user.email = email;
         user.verified = false;
         await this.verifications.delete({ user: { id: user.id } });
+
         const verification = await this.verifications.save(
           this.verifications.create({ user }),
         );
+
         this.mailService.sendVerificationEmail(user.email, verification.code);
       }
+      
       if (password) {
         user.password = password;
       }
+
       await this.users.save(user);
       return {
         ok: true,
       };
+
     } catch (error) {
-      return { ok: false, error: 'Could not update profile.' };
+      return { ok: false, error: '프로필을 업데이트 할 수 없습니다.' };
     }
   }
+
+  ////////////////////////////////
 
   async verifyEmail(code: string): Promise<VerifyEmailOutput> {
     try {
@@ -127,15 +148,19 @@ export class UserService {
         { code },
         { relations: ['user'] },
       );
+
       if (verification) {
         verification.user.verified = true;
+
         await this.users.save(verification.user);
+
         await this.verifications.delete(verification.id);
+
         return { ok: true };
       }
-      return { ok: false, error: 'Verification not found.' };
+      return { ok: false, error: '이메일 인증이 유효하지 않습니다.' };
     } catch (error) {
-      return { ok: false, error: 'Could not verify email.' };
+      return { ok: false, error: '이메일 인증을 할 수 없습니다.' };
     }
   }
 }

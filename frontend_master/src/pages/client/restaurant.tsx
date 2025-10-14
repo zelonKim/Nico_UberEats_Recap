@@ -170,11 +170,13 @@ export const Restaurant = () => {
       });
     }
   };
+
   return (
     <div>
       <Helmet>
-        <title>{data?.restaurant.restaurant?.name || ""} | Nuber Eats</title>
+        <title>{data?.restaurant.restaurant?.name || ""} | Uber Eats</title>
       </Helmet>
+
       <div
         className=" bg-gray-800 bg-center bg-cover py-48"
         style={{
@@ -191,22 +193,25 @@ export const Restaurant = () => {
           </h6>
         </div>
       </div>
-      <div className="container pb-32 flex flex-col items-end mt-20">
+
+      <div className="container pb-32 flex flex-col items-end mt-20 px-6">
         {!orderStarted && (
-          <button onClick={triggerStartOrder} className="btn px-10">
-            Start Order
+          <button onClick={triggerStartOrder} className="btn px-10 rounded-md">
+            주문하기
           </button>
         )}
+
         {orderStarted && (
           <div className="flex items-center">
             <button onClick={triggerConfirmOrder} className="btn px-10 mr-3">
-              Confirm Order
+              주문 확인
             </button>
+
             <button
               onClick={triggerCancelOrder}
               className="btn px-10 bg-black hover:bg-black"
             >
-              Cancel Order
+              주문 취소
             </button>
           </div>
         )}
@@ -220,6 +225,7 @@ export const Restaurant = () => {
               key={index}
               name={dish.name}
               description={dish.description}
+              photo={dish.photo}
               price={dish.price}
               isCustomer={true}
               options={dish.options}

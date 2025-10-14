@@ -70,12 +70,14 @@ export const LoggedInRouter = () => {
               {route.component}
             </Route>
           ))}
+
         {data.me.role === UserRole.Owner &&
           restaurantRoutes.map((route) => (
             <Route exact key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
+          
         {data.me.role === UserRole.Delivery &&
           driverRoutes.map((route) => (
             <Route exact key={route.path} path={route.path}>

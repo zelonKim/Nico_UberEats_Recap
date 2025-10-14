@@ -36,6 +36,7 @@ export interface CreateDishInput {
   name: string;
   price: number;
   description: string;
+  photo?: string | null;
   options?: DishOptionInputType[] | null;
   restaurantId: number;
 }

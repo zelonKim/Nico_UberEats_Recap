@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import { url } from "inspector";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
@@ -10,6 +9,8 @@ import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
 } from "../../__generated__/restaurantsPageQuery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: RestaurantsInput!) {
@@ -38,8 +39,11 @@ interface IFormProps {
   searchTerm: string;
 }
 
+
+
 export const Restaurants = () => {
   const [page, setPage] = useState(1);
+
   const { data, loading } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
@@ -50,40 +54,65 @@ export const Restaurants = () => {
       },
     },
   });
+
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
+
   const { register, handleSubmit, getValues } = useForm<IFormProps>();
+
   const history = useHistory();
+
   const onSearchSubmit = () => {
     const { searchTerm } = getValues();
+
     history.push({
       pathname: "/search",
       search: `?term=${searchTerm}`,
     });
   };
+
   return (
     <div>
       <Helmet>
-        <title>Home | Nuber Eats</title>
+        <title>Home | Uber Eats</title>
       </Helmet>
+
       <form
         onSubmit={handleSubmit(onSearchSubmit)}
-        className="bg-gray-800 w-full py-40 flex items-center justify-center"
+        style={{
+          backgroundImage: `url(/uberLogin.jpeg)`,
+        }}
+        className="bg-cover bg-center py-36 flex items-center justify-center "
       >
-        <input
-          ref={register({ required: true, min: 3 })}
-          name="searchTerm"
-          type="Search"
-          className="input rounded-md border-0 w-3/4 md:w-3/12"
-          placeholder="Search restaurants..."
-        />
+        <div className="relative w-3/4 sm:w-1/2 lg:w-1/3">
+          <input
+            ref={register({ required: true, min: 3 })}
+            name="searchTerm"
+            type="Search"
+            className="input rounded-md w-full pr-12 focus:border-green-500"
+            placeholder="원하는 레스토랑을 검색해보세요."
+            aria-label="검색창"
+          />
+
+          <button
+            type="submit"
+            aria-label="검색 돋보기"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-green-600 focus:outline-none"
+          >
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="text-lg"
+            ></FontAwesomeIcon>
+          </button>
+        </div>
       </form>
+
       {!loading && (
-        <div className="max-w-screen-2xl pb-20 mx-auto mt-8">
+        <div className="max-w-screen-2xl pb-8 mx-auto mt-8  px-6">
           <div className="flex justify-around max-w-sm mx-auto ">
             {data?.allCategories.categories?.map((category) => (
               <Link key={category.id} to={`/category/${category.slug}`}>
-                <div className="flex flex-col group items-center cursor-pointer">
+                <div className="flex flex-col group items-center cursor-pointer mt-8">
                   <div
                     className=" w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
                     style={{ backgroundImage: `url(${category.coverImg})` }}
@@ -106,7 +135,7 @@ export const Restaurants = () => {
               />
             ))}
           </div>
-          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
+          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-12">
             {page > 1 ? (
               <button
                 onClick={onPrevPageClick}
@@ -118,7 +147,7 @@ export const Restaurants = () => {
               <div></div>
             )}
             <span>
-              Page {page} of {data?.restaurants.totalPages}
+              {page} / {data?.restaurants.totalPages}
             </span>
             {page !== data?.restaurants.totalPages ? (
               <button

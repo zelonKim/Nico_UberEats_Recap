@@ -85,7 +85,7 @@ export const Login = () => {
         >
           <input
             ref={register({
-              required: "Email is required",
+              required: "이메일을 입력해주세요.",
               pattern:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
@@ -102,7 +102,7 @@ export const Login = () => {
             <FormError errorMessage={errors.email?.message} />
           )}
           <input
-            ref={register({ required: "Password is required" })}
+            ref={register({ required: "비밀번호를 입력해주세요." })}
             required
             name="password"
             type="password"
