@@ -28,7 +28,7 @@ export const MyRestaurants = () => {
       </Helmet>
       <div
         style={{ backgroundImage: `url(/uberLogin.jpeg)` }}
-        className=" w-full p-12 bg-cover"
+        className=" w-full h-screen mb-16  p-12 bg-cover"
       >
         <h2 className=" text-4xl font-medium mb-10">나의 레스토랑</h2>
 

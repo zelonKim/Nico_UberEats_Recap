@@ -25,13 +25,13 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {!data?.me.verified && (
+      {/* {!data?.me.verified && (
         <div className="bg-red-500 p-3 text-center text-base text-white">
           <span>이메일 인증이 완료되지 않았습니다.</span>
         </div>
-      )}
+      )} */}
 
-      <header className="p-4">
+      <header className="p-4 bg-gray-50">
         <div className="w-full  max-w-screen-2xl mx-auto flex justify-between items-center">
           <Link to="/">
             <img src={nuberLogo} className="w-44 ml-4" alt="Uber Eats" />

@@ -30,7 +30,7 @@ export const Restaurant: React.FC<IRestaurantProps> = ({
 
   return (
     <Link to={`/restaurants/${id}`}>
-      <div className="flex flex-col p-3 bg-gray-100 rounded-md hover:shadow-lg">
+      <div className="flex flex-col p-3 bg-gray-50 rounded-md hover:shadow-lg">
         <div className="bg-cover bg-center mb-3 py-28 relative">
           {imageLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">

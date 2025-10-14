@@ -192,7 +192,7 @@ export const AddDish = () => {
             onClick={onAddOptionClick}
             className="cursor-pointer text-white rounded-md bg-lime-600 hover:bg-lime-700 py-1 px-2 mt-5 "
           >
-            + 사이드메뉴 추가
+            + 메뉴 옵션
           </span>
 
           {optionsNumber.length !== 0 &&
@@ -203,7 +203,7 @@ export const AddDish = () => {
                   name={`${id}-optionName`}
                   className="py-2 px-4 focus:border-green-500 rounded-md w-4/5 focus:outline-none mr-3 border-2"
                   type="text"
-                  placeholder="사이드 메뉴 이름"
+                  placeholder="메뉴 옵션 이름"
                 />
                 <input
                   ref={register}
@@ -211,7 +211,7 @@ export const AddDish = () => {
                   className="py-2 px-4 focus:outline-none focus:border-green-500 rounded-md w-4/5 border-2"
                   type="number"
                   min={0}
-                  placeholder="사이드 메뉴 가격"
+                  placeholder="메뉴 옵션 가격"
                 />
                 <span
                   className="cursor-pointer text-white bg-red-500 hover:bg-red-600 ml-2 p-3 rounded-sm"

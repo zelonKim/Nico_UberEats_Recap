@@ -155,25 +155,26 @@ export const Dashboard = () => {
       <div className=" max-w-screen-sm mx-auto bg-white relative -top-10 shadow-lg py-8 px-5">
         {coockedOrdersData?.cookedOrders.restaurant ? (
           <>
-            <h1 className="text-center  text-3xl font-medium">
-              New Coocked Order
-            </h1>
-            <h1 className="text-center my-3 text-2xl font-medium">
-              Pick it up soon @{" "}
+            <h1 className="text-center my-3 text-2xl font-semibold">
               {coockedOrdersData?.cookedOrders.restaurant?.name}
+              로부터
+            </h1>
+
+            <h1 className="text-center text-2xl font-medium">
+              배달 요청이 들어왔습니다.
             </h1>
             <button
               onClick={() =>
                 triggerMutation(coockedOrdersData?.cookedOrders.id)
               }
-              className="btn w-full  block  text-center mt-5"
+              className="btn rounded-md w-2/3 ml-24 block  text-center mt-5"
             >
-              Accept Challenge &rarr;
+              배달 승인하기 &rarr;
             </button>
           </>
         ) : (
           <h1 className="text-center  text-3xl font-medium">
-            No orders yet...
+            아직 배달할 주문이 없습니다.
           </h1>
         )}
       </div>

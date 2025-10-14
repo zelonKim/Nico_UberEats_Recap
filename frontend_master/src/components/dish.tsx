@@ -1,5 +1,7 @@
 import React from "react";
 import { restaurant_restaurant_restaurant_menu_options } from "../__generated__/restaurant";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 interface IDishProps {
   id?: number;
@@ -39,10 +41,11 @@ export const Dish: React.FC<IDishProps> = ({
       }
     }
   };
+
   return (
     <div
       className={`rounded-md px-8 py-4 border-2 cursor-pointer  transition-all ${
-        isSelected ? "border-green-600" : " hover:border-green-500"
+        isSelected ? "border-green-500" : "hover:shadow-md"
       }`}
     >
       {photo && (
@@ -64,7 +67,7 @@ export const Dish: React.FC<IDishProps> = ({
               }`}
               onClick={onClick}
             >
-              {isSelected ? "Remove" : "Add"}
+              {isSelected ? "삭제" : "선택"}
             </button>
           )}
         </h3>
@@ -73,8 +76,9 @@ export const Dish: React.FC<IDishProps> = ({
       <h4 className="font-medium">{description}</h4>
 
       {isCustomer && options && options?.length !== 0 && (
-        <div>
-          <h5 className="mt-8 mb-3 font-medium">Dish Options:</h5>
+        <div className="">
+          <div className=" border border-1 border-gray-200 mt-6"></div>
+          <h5 className="mt-4 mb-3 font-medium">추가 옵션</h5>
           <div className="grid gap-2  justify-start">{dishOptions}</div>
         </div>
       )}

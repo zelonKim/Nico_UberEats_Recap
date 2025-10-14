@@ -60,12 +60,15 @@ export const Restaurant = () => {
   );
   const [orderStarted, setOrderStarted] = useState(false);
   const [orderItems, setOrderItems] = useState<CreateOrderItemInput[]>([]);
+
   const triggerStartOrder = () => {
     setOrderStarted(true);
   };
+
   const getItem = (dishId: number) => {
     return orderItems.find((order) => order.dishId === dishId);
   };
+
   const isSelected = (dishId: number) => {
     return Boolean(getItem(dishId));
   };
@@ -131,11 +134,14 @@ export const Restaurant = () => {
     }
     return false;
   };
+
   const triggerCancelOrder = () => {
     setOrderStarted(false);
     setOrderItems([]);
   };
+
   const history = useHistory();
+
   const onCompleted = (data: createOrder) => {
     const {
       createOrder: { ok, orderId },
@@ -144,21 +150,24 @@ export const Restaurant = () => {
       history.push(`/orders/${orderId}`);
     }
   };
+
   const [createOrderMutation, { loading: placingOrder }] = useMutation<
     createOrder,
     createOrderVariables
   >(CREATE_ORDER_MUTATION, {
     onCompleted,
   });
+
   const triggerConfirmOrder = () => {
     if (placingOrder) {
       return;
     }
     if (orderItems.length === 0) {
-      alert("Can't place empty order");
+      alert("선택된 메뉴가 없습니다.");
       return;
     }
-    const ok = window.confirm("You are about to place an order");
+    const ok = window.confirm("주문 요청이 완료되었습니다.");
+
     if (ok) {
       createOrderMutation({
         variables: {
@@ -194,29 +203,32 @@ export const Restaurant = () => {
         </div>
       </div>
 
-      <div className="container pb-32 flex flex-col items-end mt-20 px-6">
+      <div className="container pb-32 flex flex-col items-start mt-20 px-6 xl:px-12">
         {!orderStarted && (
           <button onClick={triggerStartOrder} className="btn px-10 rounded-md">
-            주문하기
+            메뉴 선택하기
           </button>
         )}
 
         {orderStarted && (
           <div className="flex items-center">
-            <button onClick={triggerConfirmOrder} className="btn px-10 mr-3">
-              주문 확인
+            <button
+              onClick={triggerConfirmOrder}
+              className="btn px-10 mr-3 rounded-md"
+            >
+              주문하기
             </button>
 
             <button
               onClick={triggerCancelOrder}
-              className="btn px-10 bg-black hover:bg-black"
+              className="btn px-10 bg-gray-800 hover:bg-black rounded-md"
             >
-              주문 취소
+              취소하기
             </button>
           </div>
         )}
 
-        <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+        <div className="xl:gap-10 w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
           {data?.restaurant.restaurant?.menu.map((dish, index) => (
             <Dish
               isSelected={isSelected(dish.id)}
