@@ -153,7 +153,7 @@ export const MyRestaurant = () => {
         }}
       ></div>
 
-      <div className="container mt-10 px-6">
+      <div className="container mt-10 px-12">
         <h2 className="text-4xl font-medium mb-10">
           {data?.myRestaurant.restaurant?.name || "Loading..."}
         </h2>
@@ -163,7 +163,7 @@ export const MyRestaurant = () => {
             to={`/restaurants/${id}/add-dish`}
             className=" mr-8 text-white rounded-md bg-lime-600 py-3 px-10 hover:bg-lime-700"
           >
-            메뉴 추가하기 &rarr;
+            메뉴 등록하기 &rarr;
           </Link>
 
           <span
@@ -174,11 +174,13 @@ export const MyRestaurant = () => {
           </span>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-8">
           {data?.myRestaurant.restaurant?.menu.length === 0 ? (
-            <h4 className="text-lg mb-5">판매할 음식 메뉴를 추가해주세요.</h4>
+            <h4 className="text-md mb-5 text-red-500 ml-2">
+              가게의 메뉴를 등록해주세요.
+            </h4>
           ) : (
-            <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+            <div className="grid mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
               {data?.myRestaurant.restaurant?.menu.map((dish, index) => (
                 <Dish
                   key={index}
@@ -192,10 +194,10 @@ export const MyRestaurant = () => {
           )}
         </div>
         <div className="mt-20 mb-10">
-          <h4 className="text-center text-2xl font-medium">매출 실적</h4>
+          <h4 className="text-center text-2xl font-medium">매출 통계</h4>
           <div className="mt-10">
             <VictoryChart
-              height={500}
+              height={350}
               theme={VictoryTheme.material}
               width={window.innerWidth}
               domainPadding={50}
@@ -205,7 +207,7 @@ export const MyRestaurant = () => {
                 labels={({ datum }) => `$${datum.y}`}
                 labelComponent={
                   <VictoryTooltip
-                    style={{ fontSize: 18 } as any}
+                    style={{ fontSize: 14 } as any}
                     renderInPortal
                     dy={-20}
                   />
@@ -217,7 +219,7 @@ export const MyRestaurant = () => {
                 interpolation="natural"
                 style={{
                   data: {
-                    strokeWidth: 5,
+                    strokeWidth: 3,
                   },
                 }}
               />
@@ -225,7 +227,7 @@ export const MyRestaurant = () => {
                 tickLabelComponent={<VictoryLabel renderInPortal />}
                 style={{
                   tickLabels: {
-                    fontSize: 20,
+                    fontSize: 12,
                   } as any,
                 }}
                 tickFormat={(tick) => new Date(tick).toLocaleDateString("ko")}

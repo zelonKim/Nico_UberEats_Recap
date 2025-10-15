@@ -109,7 +109,7 @@ export class UserService {
 
   async editProfile(
     userId: number,
-    { email, password }: EditProfileInput,
+    { email, password, name, address }: EditProfileInput,
   ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne(userId);
@@ -125,16 +125,25 @@ export class UserService {
 
         this.mailService.sendVerificationEmail(user.email, verification.code);
       }
-      
+
       if (password) {
         user.password = password;
       }
 
+      if (name) {
+        user.name = name;
+      }
+
+      if (address) {
+        user.address = address;
+      }
+
       await this.users.save(user);
+
       return {
         ok: true,
       };
-
+      
     } catch (error) {
       return { ok: false, error: '프로필을 업데이트 할 수 없습니다.' };
     }

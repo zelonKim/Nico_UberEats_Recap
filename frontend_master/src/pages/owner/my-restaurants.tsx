@@ -22,37 +22,35 @@ export const MY_RESTAURANTS_QUERY = gql`
 export const MyRestaurants = () => {
   const { data } = useQuery<myRestaurants>(MY_RESTAURANTS_QUERY);
   return (
-    <div className="flex justify-center">
+    <div
+      style={{ backgroundImage: `url(/uberLogin.jpeg)` }}
+      className="flex justify-center  bg-cover bg-fixed "
+    >
       <Helmet>
         <title>My Restaurants | Uber Eats</title>
       </Helmet>
-      <div
-        style={{ backgroundImage: `url(/uberLogin.jpeg)` }}
-        className=" w-full h-screen mb-16  p-12 bg-cover"
-      >
-        <h2 className=" text-4xl font-medium mb-10">나의 레스토랑</h2>
+      <div className=" w-full h-screen   p-12 ">
+        <h2 className=" text-4xl font-medium mb-8">나의 가게</h2>
 
         {data?.myRestaurants.ok &&
         data.myRestaurants.restaurants.length === 0 ? (
           <>
             <h4 className="text-lg mb-5 ">등록된 레스토랑이 없습니다.</h4>
-            <Link
-              className="hover:underline text-lime-600 font-bold text-lg"
-              to="/add-restaurant"
-            >
-              등록하러 가기 &rarr;
+            <Link to="/add-restaurant">
+              <button className="text-lime-600 font-bold text-lg p-2 border-gray-50 pl-3 w-36 border-2 hover:border-lime-600  bg-white rounded-md shadow-sm hover:shadow-md ml-4">
+                등록하러 가기 &rarr;
+              </button>
             </Link>
           </>
         ) : (
           <>
-            <Link
-              className=" hover:underline text-lime-600 font-bold text-lg"
-              to="/add-restaurant"
-            >
-              등록하러 가기 &rarr;
+            <Link to="/add-restaurant">
+              <button className="text-lime-600 font-bold text-lg p-2 border-gray-50 pl-3 w-36 border-2 hover:border-lime-600  bg-white rounded-md shadow-sm hover:shadow-md ml-4">
+                등록하러 가기 &rarr;
+              </button>
             </Link>
 
-            <div className=" grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+            <div className=" grid mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
               {data?.myRestaurants.restaurants.map((restaurant) => (
                 <Restaurant
                   key={restaurant.id}

@@ -8,7 +8,14 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { InternalServerErrorException } from '@nestjs/common';
-import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsString,
+  Min,
+  min,
+} from 'class-validator';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import { Payment } from 'src/payments/entities/payment.entity';
@@ -29,6 +36,16 @@ export class User extends CoreEntity {
   @Field(type => String)
   @IsEmail()
   email: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  @IsString()
+  name?: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  @IsString()
+  address?: string;
 
   @Column({ select: false })
   @Field(type => String)

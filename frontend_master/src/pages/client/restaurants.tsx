@@ -39,8 +39,6 @@ interface IFormProps {
   searchTerm: string;
 }
 
-
-
 export const Restaurants = () => {
   const [page, setPage] = useState(1);
 
@@ -108,11 +106,11 @@ export const Restaurants = () => {
       </form>
 
       {!loading && (
-        <div className="max-w-screen-2xl pb-8 mx-auto mt-8  px-6">
+        <div className="max-w-screen-2xl pb-8 mx-auto  px-6">
           <div className="flex justify-around max-w-sm mx-auto ">
             {data?.allCategories.categories?.map((category) => (
               <Link key={category.id} to={`/category/${category.slug}`}>
-                <div className="flex flex-col group items-center cursor-pointer mt-8">
+                <div className="flex flex-col group items-center cursor-pointer mt-6">
                   <div
                     className=" w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
                     style={{ backgroundImage: `url(${category.coverImg})` }}
@@ -124,7 +122,8 @@ export const Restaurants = () => {
               </Link>
             ))}
           </div>
-          <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+
+          <div className="grid mt-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
             {data?.restaurants.results?.map((restaurant) => (
               <Restaurant
                 key={restaurant.id}

@@ -15,7 +15,7 @@ import { isLoggedInVar, authTokenVar } from "../apollo";
 import nuberLogo from "../images/logo.svg";
 
 export const Header: React.FC = () => {
-  const { data } = useMe();
+  const { data: userData } = useMe();
 
   const handleLogout = () => {
     localStorage.removeItem(LOCALSTORAGE_TOKEN);
@@ -31,20 +31,20 @@ export const Header: React.FC = () => {
         </div>
       )} */}
 
-      <header className="p-4 bg-gray-50">
+      <header className="px-4 py-3 bg-gray-50">
         <div className="w-full  max-w-screen-2xl mx-auto flex justify-between items-center">
           <Link to="/">
             <img src={nuberLogo} className="w-44 ml-4" alt="Uber Eats" />
           </Link>
 
-          <span className="text-xs flex items-center gap-6">
+          <span className="text-md font-normal flex items-center gap-6">
+            고마운 분, {userData?.me.name || userData?.me.email}님
             <Link to="/edit-profile">
               <FontAwesomeIcon
                 icon={faUserCircle}
-                className="text-3xl text-gray-700 hover:text-green-800 transition-colors"
+                className="text-3xl text-lime-600 hover:text-green-700 transition-colors"
               />
             </Link>
-
             <button
               onClick={handleLogout}
               className="text-red-500 hover:text-red-600 transition-colors"

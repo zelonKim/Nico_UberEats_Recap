@@ -192,18 +192,18 @@ export const Restaurant = () => {
           backgroundImage: `url(${data?.restaurant.restaurant?.coverImg})`,
         }}
       >
-        <div className="bg-white xl:w-3/12 py-8 pl-48">
+        <div className="bg-white bg-opacity-95 xl:w-3/12 py-8 pl-48">
           <h4 className="text-4xl mb-3">{data?.restaurant.restaurant?.name}</h4>
           <h5 className="text-sm font-light mb-2">
             {data?.restaurant.restaurant?.category?.name}
           </h5>
-          <h6 className="text-sm font-light">
-            {data?.restaurant.restaurant?.address}
-          </h6>
         </div>
       </div>
 
-      <div className="container pb-32 flex flex-col items-start mt-20 px-6 xl:px-12">
+      <h6 className="text-md font-normal m-4">
+        * 가게 주소: {data?.restaurant.restaurant?.address}
+      </h6>
+      <div className="container pb-32 flex flex-col items-start mt-12 px-6 xl:px-12">
         {!orderStarted && (
           <button onClick={triggerStartOrder} className="btn px-10 rounded-md">
             메뉴 선택하기
@@ -228,7 +228,7 @@ export const Restaurant = () => {
           </div>
         )}
 
-        <div className="xl:gap-10 w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+        <div className="xl:gap-10 w-full grid mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
           {data?.restaurant.restaurant?.menu.map((dish, index) => (
             <Dish
               isSelected={isSelected(dish.id)}

@@ -48,12 +48,17 @@ export class RestaurantService {
   ): Promise<CreateRestaurantOutput> {
     try {
       const newRestaurant = this.restaurants.create(createRestaurantInput);
+
       newRestaurant.owner = owner;
+
       const category = await this.categories.getOrCreate(
         createRestaurantInput.categoryName,
       );
+
       newRestaurant.category = category;
+
       await this.restaurants.save(newRestaurant);
+
       return {
         ok: true,
         restaurantId: newRestaurant.id,
@@ -61,7 +66,7 @@ export class RestaurantService {
     } catch {
       return {
         ok: false,
-        error: 'Could not create restaurant',
+        error: '레스토랑을 등록할 수 없습니다.',
       };
     }
   }
@@ -154,6 +159,7 @@ export class RestaurantService {
       };
     }
   }
+
   countRestaurants(category: Category) {
     return this.restaurants.count({ category });
   }
@@ -197,8 +203,8 @@ export class RestaurantService {
   async allRestaurants({ page }: RestaurantsInput): Promise<RestaurantsOutput> {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
-        skip: (page - 1) * 3,
-        take: 3,
+        skip: (page - 1) * 4,
+        take: 4,
         order: {
           isPromoted: 'DESC',
         },
@@ -206,7 +212,7 @@ export class RestaurantService {
       return {
         ok: true,
         results: restaurants,
-        totalPages: Math.ceil(totalResults / 3),
+        totalPages: Math.ceil(totalResults / 4),
         totalResults,
       };
     } catch {

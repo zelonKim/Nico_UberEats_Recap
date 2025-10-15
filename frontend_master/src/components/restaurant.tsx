@@ -30,7 +30,7 @@ export const Restaurant: React.FC<IRestaurantProps> = ({
 
   return (
     <Link to={`/restaurants/${id}`}>
-      <div className="flex flex-col p-3 bg-gray-50 rounded-md hover:shadow-lg">
+      <div className="flex flex-col p-3 bg-gray-50 border-gray-100 rounded-md shadow-md hover:shadow-lg border-2 hover:border-green-500">
         <div className="bg-cover bg-center mb-3 py-28 relative">
           {imageLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
@@ -41,7 +41,7 @@ export const Restaurant: React.FC<IRestaurantProps> = ({
             <img
               src={coverImg}
               alt={name}
-              className="w-full h-full object-cover absolute inset-0"
+              className="w-full h-full object-cover absolute inset-0 rounded-md"
               onError={handleImageError}
               onLoad={handleImageLoad}
               style={{ display: imageLoading ? "none" : "block" }}
