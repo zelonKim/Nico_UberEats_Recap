@@ -59,6 +59,7 @@ export const Restaurant = () => {
     }
   );
   const [orderStarted, setOrderStarted] = useState(false);
+
   const [orderItems, setOrderItems] = useState<CreateOrderItemInput[]>([]);
 
   const triggerStartOrder = () => {
@@ -72,17 +73,20 @@ export const Restaurant = () => {
   const isSelected = (dishId: number) => {
     return Boolean(getItem(dishId));
   };
+
   const addItemToOrder = (dishId: number) => {
     if (isSelected(dishId)) {
       return;
     }
     setOrderItems((current) => [{ dishId, options: [] }, ...current]);
   };
+
   const removeFromOrder = (dishId: number) => {
     setOrderItems((current) =>
       current.filter((dish) => dish.dishId !== dishId)
     );
   };
+
   const addOptionToItem = (dishId: number, optionName: string) => {
     if (!isSelected(dishId)) {
       return;
@@ -101,6 +105,7 @@ export const Restaurant = () => {
       }
     }
   };
+  
   const removeOptionFromItem = (dishId: number, optionName: string) => {
     if (!isSelected(dishId)) {
       return;
@@ -194,18 +199,21 @@ export const Restaurant = () => {
       >
         <div className="bg-white bg-opacity-95 xl:w-3/12 py-8 pl-48">
           <h4 className="text-4xl mb-3">{data?.restaurant.restaurant?.name}</h4>
-          <h5 className="text-sm font-light mb-2">
+          <h5 className="text-md font-light mb-2">
             {data?.restaurant.restaurant?.category?.name}
           </h5>
+          <h6 className="text-sm font-light ">
+            {data?.restaurant.restaurant?.address}
+          </h6>
         </div>
       </div>
 
-      <h6 className="text-md font-normal m-4">
-        * 가게 주소: {data?.restaurant.restaurant?.address}
-      </h6>
       <div className="container pb-32 flex flex-col items-start mt-12 px-6 xl:px-12">
         {!orderStarted && (
-          <button onClick={triggerStartOrder} className="btn px-10 rounded-md">
+          <button
+            onClick={triggerStartOrder}
+            className=" btn px-10 rounded-md "
+          >
             메뉴 선택하기
           </button>
         )}
@@ -228,7 +236,7 @@ export const Restaurant = () => {
           </div>
         )}
 
-        <div className="xl:gap-10 w-full grid mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
+        <div className=" xl:gap-10 w-full grid mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
           {data?.restaurant.restaurant?.menu.map((dish, index) => (
             <Dish
               isSelected={isSelected(dish.id)}
@@ -244,17 +252,21 @@ export const Restaurant = () => {
               addItemToOrder={addItemToOrder}
               removeFromOrder={removeFromOrder}
             >
-              {dish.options?.map((option, index) => (
-                <DishOption
-                  key={index}
-                  dishId={dish.id}
-                  isSelected={isOptionSelected(dish.id, option.name)}
-                  name={option.name}
-                  extra={option.extra}
-                  addOptionToItem={addOptionToItem}
-                  removeOptionFromItem={removeOptionFromItem}
-                />
-              ))}
+              {isSelected(dish.id) ? (
+                dish.options?.map((option, index) => (
+                  <DishOption
+                    key={index}
+                    dishId={dish.id}
+                    isSelected={isOptionSelected(dish.id, option.name)}
+                    name={option.name}
+                    extra={option.extra}
+                    addOptionToItem={addOptionToItem}
+                    removeOptionFromItem={removeOptionFromItem}
+                  />
+                ))
+              ) : (
+                <div></div>
+              )}
             </Dish>
           ))}
         </div>

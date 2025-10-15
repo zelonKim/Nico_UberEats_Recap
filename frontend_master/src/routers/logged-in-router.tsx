@@ -16,6 +16,7 @@ import { AddDish } from "../pages/owner/add-dish";
 import { Order } from "../pages/order";
 import { Dashboard } from "../pages/driver/dashboard";
 import { UserRole } from "../__generated__/globalTypes";
+import { OrderList } from "../pages/orderList";
 
 const clientRoutes = [
   {
@@ -36,10 +37,10 @@ const clientRoutes = [
   },
 ];
 
-
 const commonRoutes = [
   { path: "/confirm", component: <ConfirmEmail /> },
   { path: "/edit-profile", component: <EditProfile /> },
+  { path: "/orderList", component: <OrderList /> },
   { path: "/orders/:id", component: <Order /> },
 ];
 
@@ -78,7 +79,7 @@ export const LoggedInRouter = () => {
               {route.component}
             </Route>
           ))}
-          
+
         {data.me.role === UserRole.Delivery &&
           driverRoutes.map((route) => (
             <Route exact key={route.path} path={route.path}>

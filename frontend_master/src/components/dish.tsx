@@ -1,7 +1,7 @@
 import React from "react";
 import { restaurant_restaurant_restaurant_menu_options } from "../__generated__/restaurant";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 interface IDishProps {
   id?: number;
@@ -32,6 +32,9 @@ export const Dish: React.FC<IDishProps> = ({
   children: dishOptions,
 }) => {
   const onClick = () => {
+    if (isCustomer && !orderStarted) {
+      alert("상단의 '메뉴 선택하기 버튼'을 눌러주세요.");
+    }
     if (orderStarted) {
       if (!isSelected && addItemToOrder) {
         return addItemToOrder(id);
@@ -44,7 +47,8 @@ export const Dish: React.FC<IDishProps> = ({
 
   return (
     <div
-      className={`rounded-md px-8 py-4 border-2 cursor-pointer  transition-all ${
+      onClick={onClick}
+      className={`peer rounded-md px-8 py-4 border-2 cursor-pointer  transition-all ${
         isSelected ? "border-green-500" : "hover:shadow-md"
       }`}
     >
@@ -62,12 +66,13 @@ export const Dish: React.FC<IDishProps> = ({
           {name}{" "}
           {orderStarted && (
             <button
-              className={`ml-3 py-1 px-3 focus:outline-none text-sm  text-white ${
-                isSelected ? "bg-red-500" : " bg-lime-600"
+              className={`ml-3 py-1 px-2 focus:outline-none text-sm rounded-md  text-white ${
+                isSelected && " bg-lime-600"
               }`}
-              onClick={onClick}
             >
-              {isSelected ? "삭제" : "선택"}
+              {isSelected && (
+                <FontAwesomeIcon icon={faCheck} className="text-sm " />
+              )}
             </button>
           )}
         </h3>
@@ -77,8 +82,6 @@ export const Dish: React.FC<IDishProps> = ({
 
       {isCustomer && options && options?.length !== 0 && (
         <div className="">
-          <div className=" border border-1 border-gray-200 mt-6"></div>
-          <h5 className="mt-4 mb-3 font-medium">추가 옵션</h5>
           <div className="grid gap-2  justify-start">{dishOptions}</div>
         </div>
       )}

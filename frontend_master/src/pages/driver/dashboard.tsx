@@ -173,8 +173,8 @@ export const Dashboard = () => {
             </button>
           </>
         ) : (
-          <h1 className="text-center  text-3xl font-medium">
-            아직 배달할 주문이 없습니다.
+          <h1 className="text-center  text-2xl font-medium">
+            아직 들어온 배달 요청이 없습니다.
           </h1>
         )}
       </div>

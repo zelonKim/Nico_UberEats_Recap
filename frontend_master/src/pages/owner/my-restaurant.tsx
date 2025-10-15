@@ -8,7 +8,6 @@ import {
   VictoryChart,
   VictoryLabel,
   VictoryLine,
-  VictoryPie,
   VictoryTheme,
   VictoryTooltip,
   VictoryVoronoiContainer,
@@ -93,7 +92,7 @@ export const MyRestaurant = () => {
     }
   };
 
-  const [createPaymentMutation, { loading }] = useMutation<
+  const [createPaymentMutation] = useMutation<
     createPayment,
     createPaymentVariables
   >(CREATE_PAYMENT_MUTATION, {
@@ -134,7 +133,7 @@ export const MyRestaurant = () => {
     if (subscriptionData?.pendingOrders.id) {
       history.push(`/orders/${subscriptionData.pendingOrders.id}`);
     }
-  }, [subscriptionData]);
+  }, [subscriptionData, history]);
 
   return (
     <div>
@@ -195,7 +194,7 @@ export const MyRestaurant = () => {
         </div>
         <div className="mt-20 mb-10">
           <h4 className="text-center text-2xl font-medium">매출 통계</h4>
-          <div className="mt-10">
+          <div className="shadow-md hover:bg-gray-50 border border-gray-200  my-4">
             <VictoryChart
               height={350}
               theme={VictoryTheme.material}
@@ -204,18 +203,25 @@ export const MyRestaurant = () => {
               containerComponent={<VictoryVoronoiContainer />}
             >
               <VictoryLine
-                labels={({ datum }) => `$${datum.y}`}
+                labels={({ datum }) => `${Number(datum.y).toLocaleString()} ₩`}
                 labelComponent={
                   <VictoryTooltip
-                    style={{ fontSize: 14 } as any}
+                    style={{ fontSize: 12 } as any}
                     renderInPortal
                     dy={-20}
                   />
                 }
-                data={data?.myRestaurant.restaurant?.orders.map((order) => ({
-                  x: order.createdAt,
-                  y: order.total,
-                }))}
+                data={data?.myRestaurant.restaurant?.orders
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.createdAt).getTime() -
+                      new Date(b.createdAt).getTime()
+                  )
+                  .map((order) => ({
+                    x: order.createdAt,
+                    y: order.total || 0,
+                  }))}
                 interpolation="natural"
                 style={{
                   data: {

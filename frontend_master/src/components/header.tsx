@@ -5,6 +5,8 @@ import {
   faArrowCircleRight,
   faUserAlt,
   faUserCircle,
+  faBell,
+  faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -43,6 +45,12 @@ export const Header: React.FC = () => {
               <FontAwesomeIcon
                 icon={faUserCircle}
                 className="text-3xl text-lime-600 hover:text-green-700 transition-colors"
+              />
+            </Link>
+            <Link to="/orderList">
+              <FontAwesomeIcon
+                icon={faBell}
+                className="text-3xl text-yellow-500 hover:text-yellow-600 transition-colors"
               />
             </Link>
             <button
