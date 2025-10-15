@@ -82,8 +82,8 @@ export const EditProfile = () => {
     defaultValues: {
       email: userData?.me.email,
       role: userData?.me.role,
-      name: userData?.me.name,
-      address: userData?.me.address,
+      name: userData?.me.name || "",
+      address: userData?.me.address || "",
     },
   });
 
@@ -108,7 +108,7 @@ export const EditProfile = () => {
   };
 
   return (
-    <div className="my-32 flex flex-col justify-center items-center">
+    <div className="my-24 flex flex-col justify-center items-center">
       <Helmet>
         <title>Edit Profile | Uber Eats</title>
       </Helmet>

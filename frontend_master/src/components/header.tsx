@@ -39,20 +39,26 @@ export const Header: React.FC = () => {
             <img src={nuberLogo} className="w-44 ml-4" alt="Uber Eats" />
           </Link>
 
-          <span className="text-md font-normal flex items-center gap-6">
-            고마운 분, {userData?.me.name || userData?.me.email}님
+          <span className="text-md font-normal flex items-center gap-6 text-gray-900">
+            <span className="">
+              고마운 분, {userData?.me.name || userData?.me.email}님
+            </span>
             <Link to="/edit-profile">
               <FontAwesomeIcon
                 icon={faUserCircle}
                 className="text-3xl text-lime-600 hover:text-green-700 transition-colors"
               />
             </Link>
-            <Link to="/orderList">
-              <FontAwesomeIcon
-                icon={faBell}
-                className="text-3xl text-yellow-500 hover:text-yellow-600 transition-colors"
-              />
-            </Link>
+
+            {userData?.me.role !== "Delivery" && (
+              <Link to="/orderList">
+                <FontAwesomeIcon
+                  icon={faBell}
+                  className="text-3xl text-yellow-500 hover:text-yellow-600 transition-colors"
+                />
+              </Link>
+            )}
+
             <button
               onClick={handleLogout}
               className="text-red-500 hover:text-red-600 transition-colors"

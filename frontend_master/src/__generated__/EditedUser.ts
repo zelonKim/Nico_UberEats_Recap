@@ -9,6 +9,6 @@
 
 export interface EditedUser {
   __typename: "User";
-  verified: boolean;
-  email: string;
+  name: string | null;
+  address: string | null;
 }

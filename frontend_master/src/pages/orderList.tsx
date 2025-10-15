@@ -94,7 +94,17 @@ export const OrderList: React.FC = () => {
                   총 금액: {order.total || 0} ₩
                 </span>
                 <span className="block text-sm text-lime-600 font-medium mt-1">
-                  {order.status}
+                  {order.status === "Pending"
+                    ? "승인 대기중"
+                    : order.status === "Cooking"
+                    ? "조리중"
+                    : order.status === "Cooked"
+                    ? "조리 완료"
+                    : order.status === "PickedUp"
+                    ? "픽업 완료"
+                    : order.status === "Delivered"
+                    ? "배달 완료"
+                    : ""}
                 </span>
               </div>
             </Link>

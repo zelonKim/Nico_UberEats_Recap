@@ -1,7 +1,7 @@
 import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { FULL_ORDER_FRAGMENT } from "../fragments";
 import { useMe } from "../hooks/useMe";
 import { editOrder, editOrderVariables } from "../__generated__/editOrder";
@@ -11,6 +11,8 @@ import {
   orderUpdates,
   orderUpdatesVariables,
 } from "../__generated__/orderUpdates";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const GET_ORDER = gql`
   query getOrder($input: GetOrderInput!) {
@@ -49,6 +51,7 @@ interface IParams {
 
 export const Order = () => {
   const params = useParams<IParams>();
+
   const { data: userData } = useMe();
   const [editOrderMutation] = useMutation<editOrder, editOrderVariables>(
     EDIT_ORDER
@@ -134,7 +137,18 @@ export const Order = () => {
           </div>
           {userData?.me.role === "Client" && (
             <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
-              진행 상황: {data?.getOrder.order?.status}
+              진행 상황:{" "}
+              {data?.getOrder.order?.status === "Pending"
+                ? "승인 대기중"
+                : data?.getOrder.order?.status === "Cooking"
+                ? "조리중"
+                : data?.getOrder.order?.status === "Cooked"
+                ? "조리 완료"
+                : data?.getOrder.order?.status === "PickedUp"
+                ? "픽업 완료"
+                : data?.getOrder.order?.status === "Delivered"
+                ? "배달 완료"
+                : ""}
             </span>
           )}
 
@@ -160,7 +174,14 @@ export const Order = () => {
               {data?.getOrder.order?.status !== OrderStatus.Cooking &&
                 data?.getOrder.order?.status !== OrderStatus.Pending && (
                   <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
-                    진행 상황: {data?.getOrder.order?.status}
+                    진행 상황:{" "}
+                    {data?.getOrder.order?.status === "Cooked"
+                      ? "조리 완료"
+                      : data?.getOrder.order?.status === "PickedUp"
+                      ? "픽업 완료"
+                      : data?.getOrder.order?.status === "Delivered"
+                      ? "배달 완료"
+                      : ""}
                   </span>
                 )}
             </>
@@ -170,7 +191,7 @@ export const Order = () => {
               {data?.getOrder.order?.status === OrderStatus.Cooked && (
                 <button
                   onClick={() => onButtonClick(OrderStatus.PickedUp)}
-                  className="btn"
+                  className="btn ml-36 w-1/2 rounded-md"
                 >
                   메뉴 픽업 완료
                 </button>
@@ -178,7 +199,7 @@ export const Order = () => {
               {data?.getOrder.order?.status === OrderStatus.PickedUp && (
                 <button
                   onClick={() => onButtonClick(OrderStatus.Delivered)}
-                  className="btn"
+                  className="btn ml-36 w-1/2 rounded-md"
                 >
                   배달 완료
                 </button>
@@ -186,9 +207,18 @@ export const Order = () => {
             </>
           )}
           {data?.getOrder.order?.status === OrderStatus.Delivered && (
-            <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
-              우버이츠를 이용해주셔서 감사합니다.
-            </span>
+            <>
+              <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
+                우버이츠를 이용해주셔서 감사합니다.{" "}
+                <Link to={"/"}>
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className="ml-1 hover:text-lime-700"
+                  />
+                </Link>
+              </span>
+              <div></div>
+            </>
           )}
         </div>
       </div>

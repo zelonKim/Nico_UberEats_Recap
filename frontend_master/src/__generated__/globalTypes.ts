@@ -81,13 +81,17 @@ export interface EditOrderInput {
 
 export interface EditProfileInput {
   email?: string | null;
-  password?: string | null;
   name?: string | null;
   address?: string | null;
+  password?: string | null;
 }
 
 export interface GetOrderInput {
   id: number;
+}
+
+export interface GetOrdersInput {
+  status?: OrderStatus | null;
 }
 
 export interface LoginInput {

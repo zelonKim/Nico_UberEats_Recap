@@ -34,29 +34,34 @@ interface IDriverProps {
   lng: number;
   $hover?: any;
 }
+
 const Driver: React.FC<IDriverProps> = () => <div className="text-lg">🚖</div>;
 
 export const Dashboard = () => {
   const [driverCoords, setDriverCoords] = useState<ICoords>({ lng: 0, lat: 0 });
   const [map, setMap] = useState<google.maps.Map>();
   const [maps, setMaps] = useState<any>();
+
   // @ts-ignore
   const onSucces = ({ coords: { latitude, longitude } }: Position) => {
     setDriverCoords({ lat: latitude, lng: longitude });
   };
+
   // @ts-ignore
   const onError = (error: PositionError) => {
     console.log(error);
   };
+
   useEffect(() => {
     navigator.geolocation.watchPosition(onSucces, onError, {
       enableHighAccuracy: true,
     });
   }, []);
+
   useEffect(() => {
     if (map && maps) {
       map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
-      /* const geocoder = new google.maps.Geocoder();
+      const geocoder = new google.maps.Geocoder();
       geocoder.geocode(
         {
           location: new google.maps.LatLng(driverCoords.lat, driverCoords.lng),
@@ -64,14 +69,16 @@ export const Dashboard = () => {
         (results, status) => {
           console.log(status, results);
         }
-      ); */
+      );
     }
   }, [driverCoords.lat, driverCoords.lng]);
+
   const onApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
     map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
     setMap(map);
     setMaps(maps);
   };
+
   const makeRoute = () => {
     if (map) {
       const directionsService = new google.maps.DirectionsService();
@@ -105,15 +112,19 @@ export const Dashboard = () => {
       );
     }
   };
+
   const { data: coockedOrdersData } = useSubscription<coockedOrders>(
     COOCKED_ORDERS_SUBSCRIPTION
   );
+
   useEffect(() => {
     if (coockedOrdersData?.cookedOrders.id) {
       makeRoute();
     }
   }, [coockedOrdersData]);
+
   const history = useHistory();
+
   const onCompleted = (data: takeOrder) => {
     if (data.takeOrder.ok) {
       history.push(`/orders/${coockedOrdersData?.cookedOrders.id}`);
@@ -134,25 +145,26 @@ export const Dashboard = () => {
       },
     });
   };
+
   return (
     <div>
-      <div
-        className="overflow-hidden"
-        style={{ width: window.innerWidth, height: "50vh" }}
-      >
+      <div className="overflow-hidden" style={{ height: "70vh" }}>
         <GoogleMapReact
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={onApiLoaded}
-          defaultZoom={16}
+          defaultZoom={15}
           draggable={true}
           defaultCenter={{
             lat: 36.58,
             lng: 125.95,
           }}
-          bootstrapURLKeys={{ key: "AIzaSyDBoOMuQsFzQJJ-UAxEItgE3K3-JfH7opA" }}
+          bootstrapURLKeys={{
+            key: process.env.REACT_APP_GOOGLE_MAP_KEY || "",
+          }}
         ></GoogleMapReact>
       </div>
-      <div className=" max-w-screen-sm mx-auto bg-white relative -top-10 shadow-lg py-8 px-5">
+
+      <div className=" max-w-screen-sm mx-auto bg-white relative -top-16 shadow-lg pt-4 pb-8 px-5">
         {coockedOrdersData?.cookedOrders.restaurant ? (
           <>
             <h1 className="text-center my-3 text-2xl font-semibold">
@@ -173,7 +185,7 @@ export const Dashboard = () => {
             </button>
           </>
         ) : (
-          <h1 className="text-center  text-2xl font-medium">
+          <h1 className="text-center text-gray-900 text-2xl mt-3 font-medium">
             아직 들어온 배달 요청이 없습니다.
           </h1>
         )}

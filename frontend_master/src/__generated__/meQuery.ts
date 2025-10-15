@@ -15,8 +15,8 @@ export interface meQuery_me {
   email: string;
   role: UserRole;
   verified: boolean;
-  name: string;
-  address: string;
+  name: string | null;
+  address: string | null;
 }
 
 export interface meQuery {

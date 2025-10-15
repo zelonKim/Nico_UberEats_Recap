@@ -9,6 +9,9 @@ module.exports = {
         lime: colors.lime,
       },
     },
+    screen: {
+      xs: "240px",
+    },
   },
   variants: {
     extend: {},
